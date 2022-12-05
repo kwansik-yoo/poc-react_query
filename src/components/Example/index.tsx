@@ -7,7 +7,8 @@ const Example = () => {
         queryFn: () =>
             fetch('https://api.github.com/repos/tannerlinsley/react-query').then(res =>
                 res.json()
-            )
+            ),
+        staleTime: 10000,
     })
 
     if (isLoading) return <div>{'Loading...'}</div>

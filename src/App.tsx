@@ -1,5 +1,7 @@
 import React, {useEffect, useMemo} from "react";
 import {createBrowserRouter, createRoutesFromElements, RouterProvider, Route, BrowserRouter, Routes} from "react-router-dom";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+//
 import Example from "./components/Example";
 import SimpleToDo from "./components/SimpleToDo";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
@@ -11,7 +13,7 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-           <BrowserRouter>
+            <BrowserRouter>
                <Layout>
                    <Routes>
                        <Route path="/">
@@ -20,7 +22,8 @@ const App = () => {
                        </Route>
                    </Routes>
                </Layout>
-           </BrowserRouter>
+            </BrowserRouter>
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     )
 }
