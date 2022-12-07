@@ -7,6 +7,10 @@
   - [2.1. Status](#21-status)
   - [2.2. Keys](#22-keys)
   - [2.3. Functions](#23-functions)
+- [3. Network mode](#3-network-mode)
+  - [3.1. ```online```](#31-online)
+  - [3.2. ```always```](#32-always)
+  - [3.3. ```offlineFirst```](#33-offlinefirst)
 
 ## 1. Default Options
 
@@ -71,4 +75,28 @@ function fetchTodoList({ queryKey }) {
   return new Promise()
 }
 ```
+
+## 3. Network mode    
+- network 상태에 따라 ```Query```, ```Mutation```을 어떻게 동작할 것인지 정의한다.    
+
+### 3.1. ```online```    
+1. ```default``` 설정이다.    
+2. 네트워크가 없어 fetch가 불가한 경우 ```state(loading, error, success)```와 ```fetchStatus(fetching, paused, idle)```가 함께 노출된다.     
+3. 이때 loading spinner를 활용하는 경우 단순히 ```loading``` 으로만 체크하는 것은 충분하지 않을 수 있다.    
+   - 맨처음 mount 될 때 네트워크가 없는 경우 ```loading(state)``` + ```paused(fetchStatus)``` 일 수 있기 때문이다.    
+   - ❔ ```isFetching``` 으로 대체??     
+4. query가 진행되는 도중 network가 유실되면, retry mechanism 은 중단되고, 다시 network가 잡히면 계속 실행된다.     
+   - 이 행위는 ```refetchOnReconnect(default:true)``` 와 독립적이다. (쿼리를 다시 실행하는 것이 아니라, 계속 진행하는 것)       
+
+### 3.2. ```always```   
+1. network 상태와 관계없이 ```Query```와 ```Mutation```을 수행한다.    
+2. 보통 ```AsyncStorage```나, ```Promise.resolve(5)```와 같이 네트워크 없이 수행 가능한 것에 대해 활용가능하다.    
+3. 이때 query가 실패하면 retry를 하지 않고, 바로 실패처리된다.    
+4. 이때 ```refetchOnReconnect```의 default 값은 ```false```이다.    
+
+### 3.3. ```offlineFirst```    
+1. 처음 한번 실행하고, retry를 멈춘다.    
+2. ```PWA``` 또는 ```HTTP Caching``` 을 위해 유용할 수 있다.     
+3. 보통 첫번째 실행 시 성공할 것이나, cache가 사라지는 등의 이유로 실패하면, ```online``` 모드처럼 동작한다.      
+
 
